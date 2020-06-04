@@ -1,7 +1,10 @@
 import express from 'express';
 import knex from './database/connection';
+import PointController from './controllers/pointsController';
+
 
 const routes = express.Router();
+const pointController = new PointController();
 
 routes.get('/items', async (request, response) => {
     const items = await knex('items').select('*');
@@ -18,30 +21,7 @@ routes.get('/items', async (request, response) => {
 
 });
 
-routes.post('/points', async (request, response) => {
-    const {
-        name,
-        email,
-        whatsapp,
-        latitude,
-        longitude,
-        city,
-        uf,
-        items
-    } = request.body;
+routes.post('/points', pointController.create);
 
-    await knex('points').insert({
-        image: 'image-fake',
-        name,
-        email,
-        whatsapp,
-        latitude,
-        longitude,
-        city,
-        uf
-    });
-
-    return response.json({ success: true });
-});
 
 export default routes;
